@@ -315,49 +315,53 @@ private:
     void loadIndexes() {
         // Load Primary Index (using short offset)
         ifstream pIn(DOC_PRIMARY_INDEX_FILE, ios::binary);
-        if (pIn.good()) {
+        if (pIn.is_open()) {
             size_t sz;
-            pIn.read(reinterpret_cast<char*>(&sz), sizeof(sz));
-            primaryIndex.reserve(sz);
-            for (size_t i = 0; i < sz; i++) {
-                size_t len;
-                pIn.read(reinterpret_cast<char*>(&len), sizeof(len));
-                string key(len, '\0');
-                pIn.read(&key[0], len);
-                short offset;
-                pIn.read(reinterpret_cast<char*>(&offset), sizeof(offset));
-                primaryIndex.push_back({key, offset});
+            if (pIn.read(reinterpret_cast<char*>(&sz), sizeof(sz))) {
+                primaryIndex.reserve(sz);
+                for (size_t i = 0; i < sz; i++) {
+                    size_t len;
+                    if (!pIn.read(reinterpret_cast<char*>(&len), sizeof(len))) break;
+                    string key(len, '\0');
+                    if (!pIn.read(&key[0], len)) break;
+                    short offset;
+                    if (!pIn.read(reinterpret_cast<char*>(&offset), sizeof(offset))) break;
+                    primaryIndex.push_back({key, offset});
+                }
             }
         }
 
         // Load Secondary Index (Heads and Nodes)
         ifstream sIn(DOC_SECONDARY_INDEX_FILE, ios::binary);
-        if (sIn.good()) {
+        if (sIn.is_open()) {
             size_t headsCount;
-            sIn.read(reinterpret_cast<char*>(&headsCount), sizeof(headsCount));
-            for (size_t i = 0; i < headsCount; i++) {
-                size_t len;
-                sIn.read(reinterpret_cast<char*>(&len), sizeof(len));
-                string key(len, '\0');
-                sIn.read(&key[0], len);
-                int head;
-                sIn.read(reinterpret_cast<char*>(&head), sizeof(head));
-                secondaryIndexHeads[key] = head;
+            if (sIn.read(reinterpret_cast<char*>(&headsCount), sizeof(headsCount))) {
+                for (size_t i = 0; i < headsCount; i++) {
+                    size_t len;
+                    if (!sIn.read(reinterpret_cast<char*>(&len), sizeof(len))) break;
+                    string key(len, '\0');
+                    if (!sIn.read(&key[0], len)) break;
+                    int head;
+                    if (!sIn.read(reinterpret_cast<char*>(&head), sizeof(head))) break;
+                    secondaryIndexHeads[key] = head;
+                }
             }
             size_t nodesCount;
-            sIn.read(reinterpret_cast<char*>(&nodesCount), sizeof(nodesCount));
-            secondaryIndex.reserve(nodesCount);
-            for (size_t i = 0; i < nodesCount; i++) {
-                size_t len;
-                sIn.read(reinterpret_cast<char*>(&len), sizeof(len));
-                string name(len, '\0');
-                sIn.read(&name[0], len);
-                int pos, next;
-                sIn.read(reinterpret_cast<char*>(&pos), sizeof(pos));
-                sIn.read(reinterpret_cast<char*>(&next), sizeof(next));
-                DocSecondaryIndexNode newNode(name, pos);
-                newNode.next = next;
-                secondaryIndex.push_back(std::move(newNode));
+            if (sIn.read(reinterpret_cast<char*>(&nodesCount), sizeof(nodesCount))) {
+                secondaryIndex.reserve(nodesCount);
+                for (size_t i = 0; i < nodesCount; i++) {
+                    size_t len;
+                    if (!sIn.read(reinterpret_cast<char*>(&len), sizeof(len))) break;
+                    string name(len, '\0');
+                    if (!sIn.read(&name[0], len)) break;
+                    int pos, next;
+                    if (!sIn.read(reinterpret_cast<char*>(&pos), sizeof(pos))) break;
+                    if (!sIn.read(reinterpret_cast<char*>(&next), sizeof(next))) break;
+
+                    DocSecondaryIndexNode newNode(name, pos);
+                    newNode.next = next;
+                    secondaryIndex.push_back(std::move(newNode));
+                }
             }
         }
     }
