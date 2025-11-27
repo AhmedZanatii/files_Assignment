@@ -87,7 +87,7 @@ public:
   }
 };
 
-int main() {
+/*int main() {
   // Add test data first
   AppointmentManager mgr;
   mgr.addAppointment("A001", "P001", "D001", "2024-01-15", "10:00");
@@ -119,4 +119,4 @@ int main() {
   cout << endl;
 
   return 0;
-}
+}*/

@@ -11,13 +11,9 @@
 #include <stdexcept>
 #include <sstream>
 #include <iterator>
-#include <cstdio> // For remove()
+#include <cstdio>
 
 using namespace std;
-
-// =========================================================================
-//                  I. FILE CONSTANTS & CORE STRUCTURES
-// =========================================================================
 
 // Appointment Constants
 const string APPT_PRIMARY_INDEX_FILE = "primary.idx";
@@ -90,49 +86,55 @@ private:
     void loadIndexes() {
         // Load Primary Index
         ifstream pIn(APPT_PRIMARY_INDEX_FILE, ios::binary);
-        if (pIn.good()) {
+        if (pIn.is_open()) {
             size_t sz;
-            pIn.read(reinterpret_cast<char*>(&sz), sizeof(sz));
-            primaryIndex.reserve(sz);
-            for (size_t i = 0; i < sz; i++) {
-                size_t len;
-                pIn.read(reinterpret_cast<char*>(&len), sizeof(len));
-                string key(len, '\0');
-                pIn.read(&key[0], len);
-                long offset;
-                pIn.read(reinterpret_cast<char*>(&offset), sizeof(offset));
-                primaryIndex.push_back({key, offset});
+
+            if (pIn.read(reinterpret_cast<char*>(&sz), sizeof(sz))) {
+                primaryIndex.reserve(sz);
+                for (size_t i = 0; i < sz; i++) {
+                    size_t len;
+                    if (!pIn.read(reinterpret_cast<char*>(&len), sizeof(len))) break;
+                    string key(len, '\0');
+                    if (!pIn.read(&key[0], len)) break;
+                    long offset;
+                    if (!pIn.read(reinterpret_cast<char*>(&offset), sizeof(offset))) break;
+                    primaryIndex.push_back({key, offset});
+                }
             }
         }
 
         // Load Secondary Index (Heads and Nodes)
         ifstream sIn(APPT_SECONDARY_INDEX_FILE, ios::binary);
-        if (sIn.good()) {
+        if (sIn.is_open()) {
             size_t headsCount;
-            sIn.read(reinterpret_cast<char*>(&headsCount), sizeof(headsCount));
-            for (size_t i = 0; i < headsCount; i++) {
-                size_t len;
-                sIn.read(reinterpret_cast<char*>(&len), sizeof(len));
-                string key(len, '\0');
-                sIn.read(&key[0], len);
-                int head;
-                sIn.read(reinterpret_cast<char*>(&head), sizeof(head));
-                secondaryIndexHeads[key] = head;
+            if (sIn.read(reinterpret_cast<char*>(&headsCount), sizeof(headsCount))) {
+                for (size_t i = 0; i < headsCount; i++) {
+                    size_t len;
+                    if (!sIn.read(reinterpret_cast<char*>(&len), sizeof(len))) break;
+                    string key(len, '\0');
+                    if (!sIn.read(&key[0], len)) break;
+                    int head;
+                    if (!sIn.read(reinterpret_cast<char*>(&head), sizeof(head))) break;
+                    secondaryIndexHeads[key] = head;
+                }
             }
+
             size_t nodesCount;
-            sIn.read(reinterpret_cast<char*>(&nodesCount), sizeof(nodesCount));
-            secondaryIndex.reserve(nodesCount);
-            for (size_t i = 0; i < nodesCount; i++) {
-                size_t len;
-                sIn.read(reinterpret_cast<char*>(&len), sizeof(len));
-                string id(len, '\0');
-                sIn.read(&id[0], len);
-                int pos, next;
-                sIn.read(reinterpret_cast<char*>(&pos), sizeof(pos));
-                sIn.read(reinterpret_cast<char*>(&next), sizeof(next));
-                ApptSecondaryIndexNode newNode(id, pos);
-                newNode.next = next;
-                secondaryIndex.push_back(std::move(newNode));
+            if (sIn.read(reinterpret_cast<char*>(&nodesCount), sizeof(nodesCount))) {
+                secondaryIndex.reserve(nodesCount);
+                for (size_t i = 0; i < nodesCount; i++) {
+                    size_t len;
+                    if (!sIn.read(reinterpret_cast<char*>(&len), sizeof(len))) break;
+                    string id(len, '\0');
+                    if (!sIn.read(&id[0], len)) break;
+                    int pos, next;
+                    if (!sIn.read(reinterpret_cast<char*>(&pos), sizeof(pos))) break;
+                    if (!sIn.read(reinterpret_cast<char*>(&next), sizeof(next))) break;
+
+                    ApptSecondaryIndexNode newNode(id, pos);
+                    newNode.next = next;
+                    secondaryIndex.push_back(std::move(newNode));
+                }
             }
         }
     }
@@ -182,7 +184,7 @@ public:
     AppointmentIndexManager() { loadIndexes(); }
     ~AppointmentIndexManager() { saveIndexes(); }
 
-    // Task 1: Binary Search Implementation
+    // Binary Search Implementation
     // Returns index in primaryIndex vector, or -1 if not found.
     int binarySearchPrimary(const string& appointmentId) const {
         int left = 0;
@@ -196,7 +198,7 @@ public:
         return -1;
     }
 
-    // Task 3: Keeps Primary Index Sorted & Task 4: The Binding
+    // Keeps Primary Index Sorted & Task 4: The Binding
     // Inserts an entry and returns its new position.
     int insertPrimary(const string& appointmentId, long offset) {
         ApptPrimaryIndexEntry newEntry{appointmentId, offset};
@@ -206,7 +208,7 @@ public:
         return pos;
     }
 
-    // Task 3: Updates Primary Index on delete
+    // Updates Primary Index on delete
     // Deletes an entry and returns its old position for secondary index maintenance.
     int deletePrimary(const string& appointmentId) {
         ApptPrimaryIndexEntry tempEntry{appointmentId, 0};
@@ -223,7 +225,7 @@ public:
         return -1; // Not found
     }
 
-    // Task 2: Linked-List Secondary Index Management
+    // Linked-List Secondary Index Management
     // Inserts a new node and binds it to the primary index position.
     void insertSecondary(const string& doctorId, int primaryIndexPos) {
         ApptSecondaryIndexNode newNode(doctorId, primaryIndexPos);
@@ -241,7 +243,7 @@ public:
         }
     }
 
-    // Task 2/3: Linked-List Secondary Index Deletion
+    // Linked-List Secondary Index Deletion
     void deleteSecondary(const string& doctorId, int primaryIndexPos) {
         auto head_it = secondaryIndexHeads.find(doctorId);
         if (head_it == secondaryIndexHeads.end()) return;
@@ -403,7 +405,7 @@ public:
     DoctorIndexManager() { loadIndexes(); }
     ~DoctorIndexManager() { saveIndexes(); }
 
-    // Task 1: Binary Search Implementation
+    // Binary Search Implementation
     int binarySearchPrimary(const string& doctorId) const {
         int left = 0;
         int right = (int)primaryIndex.size() - 1;
@@ -416,7 +418,7 @@ public:
         return -1;
     }
 
-    // Task 3: Keeps Primary Index Sorted & Task 4: The Binding
+    // Keeps Primary Index Sorted & Task 4: The Binding
     int insertPrimary(const string& doctorId, short offset) {
         DocPrimaryIndexEntry newEntry{doctorId, offset};
         auto it = std::lower_bound(primaryIndex.begin(), primaryIndex.end(), newEntry);
@@ -425,7 +427,7 @@ public:
         return pos;
     }
 
-    // Task 3: Updates Primary Index on delete
+    // Updates Primary Index on delete
     int deletePrimary(const string& doctorId) {
         DocPrimaryIndexEntry tempEntry{doctorId, 0};
         auto it = std::lower_bound(primaryIndex.begin(), primaryIndex.end(), tempEntry);
@@ -439,7 +441,7 @@ public:
         return -1;
     }
 
-    // Task 2: Linked-List Secondary Index Management
+    // Linked-List Secondary Index Management
     void insertSecondary(const string& doctorName, int primaryIndexPos) {
         DocSecondaryIndexNode newNode(doctorName, primaryIndexPos);
         int newNodeIdx = (int)secondaryIndex.size();
@@ -456,7 +458,7 @@ public:
         }
     }
 
-    // Task 2/3: Linked-List Secondary Index Deletion
+    // Linked-List Secondary Index Deletion
     void deleteSecondary(const string& doctorName, int primaryIndexPos) {
         auto head_it = secondaryIndexHeads.find(doctorName);
         if (head_it == secondaryIndexHeads.end()) return;
@@ -501,4 +503,4 @@ public:
     }
 };
 
-#endif // INDEX_MANAGERS_H
+#endif
