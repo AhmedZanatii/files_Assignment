@@ -33,7 +33,7 @@ private:
   void setSelectFields() {
     while (!this->stringQueue.empty()) {
       string select = toLower(trim(this->stringQueue.front()));
-      if (toLower(select) == "from")
+      if (select == "from")
         break;
       this->stringQueue.pop();
       if (select.back() == ',')
@@ -43,11 +43,17 @@ private:
   }
 
   void setWhereClause() {
-    string whereClause = stringQueue.front();
-    stringQueue.pop();
-    if (!stringQueue.empty()) {
-      throw invalid_argument("invalid statement after where clause");
+    // Concatenate all remaining tokens into whereClause
+    string whereClause = "";
+    while (!stringQueue.empty()) {
+      if (!whereClause.empty()) {
+        whereClause += " ";
+      }
+      whereClause += stringQueue.front();
+      stringQueue.pop();
     }
+    whereClause = toLower(trim(whereClause));
+    
     // Remove semicolon if exists
     if (!whereClause.empty() && whereClause.back() == ';') {
       whereClause.pop_back();
@@ -77,7 +83,7 @@ public:
   string columnValue;
   queue<string> stringQueue;
 
-  void parser(string input) {
+  void parse(string input) {
     this->selectFields.clear();
     this->tableName = "";
     this->columnName = "";
@@ -111,20 +117,3 @@ public:
     setWhereClause();
   }
 };
-
-int main() {
-  try {
-    Parser parser;
-    parser.parser("SELECT name, age FROM users WHERE id='123';");
-    cout << "Table Name: " << parser.tableName << "\n";
-    cout << "Select Fields: ";
-    for (string field : parser.selectFields) {
-      cout << field << " ";
-    }
-    cout << "where " << parser.columnName << " = " << parser.columnValue
-         << "\n";
-  } catch (const exception &e) {
-    cerr << "Error: " << e.what() << "\n";
-  }
-  return 0;
-}
