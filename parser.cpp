@@ -52,8 +52,8 @@ private:
       whereClause += stringQueue.front();
       stringQueue.pop();
     }
-    whereClause = toLower(trim(whereClause));
-    
+    whereClause = trim(whereClause);
+
     // Remove semicolon if exists
     if (!whereClause.empty() && whereClause.back() == ';') {
       whereClause.pop_back();
@@ -65,8 +65,8 @@ private:
       throw invalid_argument("invalid WHERE clause format");
     }
 
-    // Extract column name and value
-    this->columnName = trim(whereClause.substr(0, equalPos));
+    // Extract column name (lowercase)
+    this->columnName = toLower(trim(whereClause.substr(0, equalPos)));
     this->columnValue = trim(whereClause.substr(equalPos + 1));
 
     // Remove quotes from value
