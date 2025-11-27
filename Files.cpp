@@ -32,9 +32,9 @@ void addAppointmentToAvailList(long offset, size_t record_size) {
 const string APPT_DATA_FILE = "appointments.dat";
 
 // Fixed sizes for fields
-const int ID_LEN = 16;
-const int PID_LEN = 24;
-const int DID_LEN = 16;
+const int ID_LEN = 15;
+const int PID_LEN = 15;
+const int DID_LEN = 15;
 const int DATE_LEN = 12;
 const int TIME_LEN = 8;
 const int STATUS_LEN = 8;
@@ -231,7 +231,7 @@ public:
 //                  MAIN FUNCTION (With Error Handling)
 // =========================================================================
 
-/*int main() {
+int main() {
     try {
         cout << "--- Hospital Appointment Management System Demonstration ---\n";
         // Instantiate the manager
@@ -318,4 +318,4 @@ public:
         return 5;
     }
     return 0;
-}*/
+}
