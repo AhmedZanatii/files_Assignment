@@ -66,7 +66,7 @@ private:
     }
 
     // Extract column name (lowercase)
-    this->columnName = toLower(trim(whereClause.substr(0, equalPos)));
+    this->searchColumnName = toLower(trim(whereClause.substr(0, equalPos)));
     this->columnValue = trim(whereClause.substr(equalPos + 1));
 
     // Remove quotes from value
@@ -79,14 +79,14 @@ private:
 public:
   vector<string> selectFields;
   string tableName;
-  string columnName;
+  string searchColumnName;
   string columnValue;
   queue<string> stringQueue;
 
   void parse(string input) {
     this->selectFields.clear();
     this->tableName = "";
-    this->columnName = "";
+    this->searchColumnName = "";
     this->columnValue = "";
     this->stringQueue = queue<string>();
     setQueue(input);
