@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <fstream>
 #include <cstring>
 #include <string>
@@ -15,26 +15,7 @@ const int DOC_RECORD_LEN = 1 + 3 + DOC_DATA_LEN;
 const string DOC_FILE_NAME = "Doctors.dat";
 
 //DEPENDENCY STUBS (will implemented by Ahmed)
-short getDoctorAvailSlot(short record_size)
-{
-    return -1;
-}
-void addDoctorToAvailList(short offset, short record_size)
-{
-    cout << "STUB: Added offset " << offset << " to AVAIL LIST." << endl;
-}
-short searchDoctorPrimaryIndex(const char* id)
-{
-    return -1;
-}
-void insertDoctorIndex(const char* index_name, const char* key, short offset)
-{
-    cout << "STUB: Inserted key " << key << " into " << index_name << " at offset " << offset << endl;
-}
-void deleteDoctorIndex(const char* index_name, const char* key, short offset)
-{
-    cout << "STUB: Deleted key " << key << " from " << index_name << " at offset " << offset << endl;
-}
+
 
 struct DoctorRecord
 {
@@ -232,3 +213,4 @@ int main()
 
     return 0;
 }
+*/

@@ -61,6 +61,12 @@ build CMakeFiles/Ass1Files.dir/AlgoAss.cpp.obj: CXX_COMPILER__Ass1Files_unscanne
   OBJECT_DIR = CMakeFiles\Ass1Files.dir
   OBJECT_FILE_DIR = CMakeFiles\Ass1Files.dir
 
+build CMakeFiles/Ass1Files.dir/DoctorModule.cpp.obj: CXX_COMPILER__Ass1Files_unscanned_Debug C$:/c++/Ass1Files/DoctorModule.cpp || cmake_object_order_depends_target_Ass1Files
+  DEP_FILE = CMakeFiles\Ass1Files.dir\DoctorModule.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Ass1Files.dir
+  OBJECT_FILE_DIR = CMakeFiles\Ass1Files.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Ass1Files
@@ -69,7 +75,7 @@ build CMakeFiles/Ass1Files.dir/AlgoAss.cpp.obj: CXX_COMPILER__Ass1Files_unscanne
 #############################################
 # Link the executable Ass1Files.exe
 
-build Ass1Files.exe: CXX_EXECUTABLE_LINKER__Ass1Files_Debug CMakeFiles/Ass1Files.dir/main.cpp.obj CMakeFiles/Ass1Files.dir/AlgoAss.cpp.obj
+build Ass1Files.exe: CXX_EXECUTABLE_LINKER__Ass1Files_Debug CMakeFiles/Ass1Files.dir/main.cpp.obj CMakeFiles/Ass1Files.dir/AlgoAss.cpp.obj CMakeFiles/Ass1Files.dir/DoctorModule.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Ass1Files.dir

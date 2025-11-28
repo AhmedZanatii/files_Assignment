@@ -231,7 +231,7 @@ public:
 //                  MAIN FUNCTION (With Error Handling)
 // =========================================================================
 
-/*int main() {
+int main() {
     try {
         cout << "--- Hospital Appointment Management System Demonstration ---\n";
         // Instantiate the manager
@@ -318,4 +318,4 @@ public:
         return 5;
     }
     return 0;
-}*/
+}

@@ -2,6 +2,7 @@
 #include <string>
 #include <limits>
 #include "query.cpp"
+#include "DoctorModule.cpp"
 
 using namespace std;
 
