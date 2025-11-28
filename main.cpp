@@ -6,6 +6,13 @@
 using namespace std;
 
 
+
+
+DoctorIndexManager docIndexMgr;
+DoctorManager docMgr;
+
+
+
 int main() {
 
 
@@ -35,7 +42,14 @@ int main() {
 
         switch (choice) {
             case 1: {
-                // Add New Doctor - TODO: implement
+                string id, name, address;
+                cout << "Enter Doctor ID (15 chars max): ";
+                getline(cin, id);
+                cout << "Enter Doctor Name (30 chars max): ";
+                getline(cin, name);
+                cout << "Enter Doctor Address (30 chars max): ";
+                getline(cin, address);
+                docMgr.AddDoctor(id, name, address);
                 break;
             }
             case 2: {
@@ -62,7 +76,12 @@ int main() {
                 break;
             }
             case 3: {
-                // Update Doctor Name (Doctor ID) - TODO: implement
+                string id, new_name;
+                cout << "Enter Doctor ID to update: ";
+                getline(cin, id);
+                cout << "Enter new Doctor Name: ";
+                getline(cin, new_name);
+                docMgr.UpdateDoctorName(id, new_name);
                 break;
             }
             case 4: {
@@ -94,11 +113,26 @@ int main() {
                 break;
             }
             case 6: {
-                // Delete Doctor (Doctor ID) - TODO: implement
+                string id;
+                cout << "Enter Doctor ID to delete: ";
+                getline(cin, id);
+                docMgr.DeleteDoctor(id);
                 break;
             }
             case 7: {
-                // Print Doctor Info (Doctor ID) - TODO: implement
+                string id;
+                cout << "Enter Doctor ID: "; getline(cin, id);
+
+                optional<DoctorRecord> doc = docMgr.getByDoctorId(id);
+                if (doc)
+                {
+                    cout << "Found Doctor " << id << ": ";
+                    DoctorManager::printRecord(*doc);
+                }
+                else
+                {
+                    cout << "Error: Doctor " << id << " not found or is deleted.\n";
+                }
                 break;
             }
             case 8: {
