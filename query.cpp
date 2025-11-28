@@ -74,6 +74,11 @@ private:
   void handleDoctorsTable() {
     DoctorManager docMgr = DoctorManager();
 
+    if (parser.searchColumnName.empty()) {
+      cout << "Error: WHERE clause is required for this query." << endl;
+      return;
+    }
+
     if (parser.searchColumnName == "doctor_name") {
       vector<DoctorRecord> records =
           docMgr.getByDoctorName(parser.columnValue);
@@ -94,6 +99,7 @@ private:
         cout << "No active record found for Doctor ID: "
              << parser.columnValue << endl;
       }
+      
     } else {
       cout << "Unsupported WHERE column: " << parser.searchColumnName << endl;
     }
@@ -101,6 +107,11 @@ private:
 
   void handleAppointmentsTable() {
     AppointmentManager apptMgr = AppointmentManager();
+
+    if (parser.searchColumnName.empty()) {
+      cout << "Error: WHERE clause is required for this query." << endl;
+      return;
+    }
 
     if (parser.searchColumnName == "doctor_id") {
       vector<AppointmentRecord> records =
