@@ -105,7 +105,7 @@ public:
     if (toLower(trim(stringQueue.front())) == "where")
       throw invalid_argument("missing table name");
 
-    this->tableName = trim(stringQueue.front());
+    this->tableName = toLower(trim(stringQueue.front()));
     stringQueue.pop();
     if (stringQueue.empty()) {
       return;
