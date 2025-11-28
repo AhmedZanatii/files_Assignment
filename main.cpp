@@ -2,17 +2,10 @@
 #include <string>
 #include <limits>
 #include "query.cpp"
-#include "DoctorModule.cpp"
 
 using namespace std;
 
-
-
-
 DoctorManager docMgr;
-
-
-
 
 int main() {
 
@@ -27,7 +20,7 @@ int main() {
         cout << "5. Delete Appointment (Appointment ID)\n";
         cout << "6. Delete Doctor (Doctor ID)\n";
         cout << "7. Print Doctor Info (Doctor ID)\n";
-        cout << "8. Pri Appointment Info (Appointment ID)\n";
+        cout << "8. Print Appointment Info (Appointment ID)\n";
         cout << "9. Write Query\n";
         cout << "10. Exit\n";
         cout << "Choose an option: ";
@@ -54,8 +47,9 @@ int main() {
                 cout << "Enter Doctor Address: ";
                 getline(cin, address);
     
-                docMgr.AddDoctor(id, name, address);
-                cout << "Doctor added.\n";
+                if(docMgr.AddDoctor(id, name, address)) {
+                     cout << "Doctor added.\n";
+                }
                 break;
             }
             case 2: {
@@ -137,12 +131,12 @@ int main() {
                 getline(cin, id);
     
                 auto doc = docMgr.getByDoctorId(id);
-    
+
                 if (doc)
                     DoctorManager::printRecord(*doc);
                 else
                     cout << "Doctor not found.\n";
-    
+
                 break;
             }
             case 8: {

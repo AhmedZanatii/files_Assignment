@@ -6,12 +6,7 @@
 #include <stdexcept>
 #include <optional>
 #include "IndexManagers.h"
-
 using namespace std;
-
-// =========================================================================
-//                  GLOBAL DEFINITIONS (Fixes Linker Error)
-// =========================================================================
 
 // Definition for the global index manager instance
 AppointmentIndexManager apptIndexMgr;
@@ -24,10 +19,6 @@ long getAppointmentAvailSlot(size_t record_size) {
 void addAppointmentToAvailList(long offset, size_t record_size) {
     cout << "--- Mock: Added record at disk offset " << offset << " to Avail List ---\n";
 }
-
-// =========================================================================
-//                  CONSTANTS AND STRUCTURES (From Files.cpp)
-// =========================================================================
 
 const string APPT_DATA_FILE = "appointments.dat";
 
@@ -49,9 +40,7 @@ struct AppointmentRecord {
     char status[STATUS_LEN];
 };
 
-// =========================================================================
-//                  HELPER & FILE I/O FUNCTIONS
-// =========================================================================
+// HELPER & FILE I/O FUNCTIONS
 
 void writeFixed(char* dest, const string& s, int size) {
     memset(dest, 0, size);
@@ -98,9 +87,7 @@ AppointmentRecord readRecord(long pos) {
     return rec;
 }
 
-// =========================================================================
-//                  APPOINTMENT MANAGER CLASS
-// =========================================================================
+// APPOINTMENT MANAGER CLASS
 
 class AppointmentManager {
 public:
@@ -227,9 +214,6 @@ public:
     }
 };
 
-// =========================================================================
-//                  MAIN FUNCTION (With Error Handling)
-// =========================================================================
 
 /*int main() {
     try {

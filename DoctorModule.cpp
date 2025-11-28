@@ -30,11 +30,7 @@ struct DoctorRecord
     char address[DOC_ADDRESS_LEN];
     char status[DOC_STATUS_LEN];
 };
-
-// =====================================================================
-//                    HELPER FUNCTIONS
-// =====================================================================
-
+//helper func
 void DoctorWriteFixed(char* dest, const string& s, int size) 
 {
     memset(dest, 0, size);
@@ -49,9 +45,7 @@ string DoctorReadFixed(const char* src, int size)
     return string(src, len);
 }
 
-// =====================================================================
-//                    FILE I/O FUNCTIONS
-// =====================================================================
+//FILE I/O func
 
 long appendDoctorRecord(const DoctorRecord& rec)
 {
@@ -99,22 +93,18 @@ DoctorRecord readDoctorRecord(long pos)
     file.close();
     return rec;
 }
-
-// =====================================================================
-//                    DOCTOR MANAGER
-// =====================================================================
-
+// DOCTOR MANAGER
 class DoctorManager
 {
 public:
 
-    void AddDoctor(const string& id, const string& name, const string& addr)
+    bool AddDoctor(const string& id, const string& name, const string& addr)
     {
         // Duplicate check
         if (docIndexMgr.searchByPrimary(id))
         {
             cout << "Doctor ID already exists.\n";
-            return;
+            return false;
         }
 
         // Build record
@@ -132,6 +122,8 @@ public:
 
         // INSERT INTO SECONDARY (based on name)
         docIndexMgr.insertSecondary(name, indexPos);
+
+        return  true;
     }
 
 

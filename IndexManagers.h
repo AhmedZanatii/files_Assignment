@@ -64,9 +64,7 @@ struct DocSecondaryIndexNode {
         : doctorName(name), primaryIndexPos(pos), next(-1) {}
 };
 
-// =========================================================================
-//                             APPOINTMENT MANAGER
-// =========================================================================
+//  APPOINTMENT MANAGER
 
 class AppointmentIndexManager {
 private:
@@ -197,8 +195,6 @@ public:
         }
         return -1;
     }
-
-    // Keeps Primary Index Sorted & Task 4: The Binding
     // Inserts an entry and returns its new position.
     int insertPrimary(const string& appointmentId, long offset) {
         ApptPrimaryIndexEntry newEntry{appointmentId, offset};
@@ -293,9 +289,7 @@ public:
     }
 };
 
-// =========================================================================
-//                               DOCTOR MANAGER
-// =========================================================================
+// DOCTOR MANAGER
 
 class DoctorIndexManager {
 private:
