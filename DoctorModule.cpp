@@ -44,14 +44,14 @@ struct DoctorRecord
 //                    HELPER FUNCTIONS
 // =====================================================================
 
-void writeFixed(char* dest, const string& s, int size) 
+void DoctorWriteFixed(char* dest, const string& s, int size) 
 {
     memset(dest, 0, size);
     for (int i = 0; i < size && i < (int)s.length(); ++i)
         dest[i] = s[i];
 }
 
-string readFixed(const char* src, int size) 
+string DoctorReadFixed(const char* src, int size) 
 {
     int len = 0;
     while (len < size && src[len] != 0) len++;
@@ -124,10 +124,10 @@ public:
 
         // Build record
         DoctorRecord rec;
-        writeFixed(rec.doctor_id, id, DOC_ID_LEN);
-        writeFixed(rec.doctor_name, name, DOC_NAME_LEN);
-        writeFixed(rec.address, addr, DOC_ADDRESS_LEN);
-        writeFixed(rec.status, "Active", DOC_STATUS_LEN);
+        DoctorWriteFixed(rec.doctor_id, id, DOC_ID_LEN);
+        DoctorWriteFixed(rec.doctor_name, name, DOC_NAME_LEN);
+        DoctorWriteFixed(rec.address, addr, DOC_ADDRESS_LEN);
+        DoctorWriteFixed(rec.status, "Active", DOC_STATUS_LEN);
 
         // Insert into file
         long pos = appendDoctorRecord(rec);
@@ -148,12 +148,12 @@ public:
         long pos = entry->offset;
         DoctorRecord rec = readDoctorRecord(pos);
 
-        if (readFixed(rec.status, DOC_STATUS_LEN) != "Active") {
+        if (DoctorReadFixed(rec.status, DOC_STATUS_LEN) != "Active") {
             cout << "Cannot update deleted doctor.\n";
             return;
         }
 
-        writeFixed(rec.doctor_name, new_name, DOC_NAME_LEN);
+        DoctorWriteFixed(rec.doctor_name, new_name, DOC_NAME_LEN);
         writeDoctorRecord(pos, rec);
     }
 
@@ -170,12 +170,12 @@ public:
         long pos = entry->offset;
         DoctorRecord rec = readDoctorRecord(pos);
 
-        if (readFixed(rec.status, DOC_STATUS_LEN) == "Deleted") {
+        if (DoctorReadFixed(rec.status, DOC_STATUS_LEN) == "Deleted") {
             cout << "Doctor already deleted.\n";
             return;
         }
 
-        writeFixed(rec.status, "Deleted", DOC_STATUS_LEN);
+        DoctorWriteFixed(rec.status, "Deleted", DOC_STATUS_LEN);
         writeDoctorRecord(pos, rec);
 
         docIndexMgr.deletePrimary(id);
@@ -189,7 +189,7 @@ public:
 
         DoctorRecord rec = readDoctorRecord(entry->offset);
 
-        if (readFixed(rec.status, DOC_STATUS_LEN) == "Active")
+        if (DoctorReadFixed(rec.status, DOC_STATUS_LEN) == "Active")
             return rec;
 
         return nullopt;
@@ -197,10 +197,10 @@ public:
 
     static void printRecord(const DoctorRecord& rec)
 {
-        cout << "DoctorID: " << readFixed(rec.doctor_id, DOC_ID_LEN)
-            << " | Name: " << readFixed(rec.doctor_name, DOC_NAME_LEN)
-            << " | Address: " << readFixed(rec.address, DOC_ADDRESS_LEN)
-            << " | Status: " << readFixed(rec.status, DOC_STATUS_LEN)
+        cout << "DoctorID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN)
+            << " | Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN)
+            << " | Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN)
+            << " | Status: " << DoctorReadFixed(rec.status, DOC_STATUS_LEN)
             << "\n";
     }
 };

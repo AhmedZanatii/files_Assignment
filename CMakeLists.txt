@@ -6,5 +6,4 @@ set(CMAKE_CXX_STANDARD 26)
 add_executable(Ass1Files main.cpp
         cmake-build-debug/AlgoAss.cpp
         cmake-build-debug/AlgoAss.h
-        DoctorModule.cpp
         IndexManagers.h)

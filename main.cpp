@@ -2,7 +2,6 @@
 #include <string>
 #include <limits>
 #include "query.cpp"
-#include "Files.cpp"
 #include "DoctorModule.cpp"
 
 using namespace std;
@@ -10,8 +9,8 @@ using namespace std;
 
 
 
-DoctorIndexManager docIndexMgr;
 DoctorManager docMgr;
+
 
 
 
