@@ -2,6 +2,7 @@
 #include <string>
 #include <limits>
 #include "query.cpp"
+#include "Files.cpp"
 #include "DoctorModule.cpp"
 
 using namespace std;
@@ -44,13 +45,18 @@ int main() {
         switch (choice) {
             case 1: {
                 string id, name, address;
-                cout << "Enter Doctor ID (15 chars max): ";
+    
+                cout << "Enter Doctor ID: ";
                 getline(cin, id);
-                cout << "Enter Doctor Name (30 chars max): ";
+    
+                cout << "Enter Doctor Name: ";
                 getline(cin, name);
-                cout << "Enter Doctor Address (30 chars max): ";
+    
+                cout << "Enter Doctor Address: ";
                 getline(cin, address);
+    
                 docMgr.AddDoctor(id, name, address);
+                cout << "Doctor added.\n";
                 break;
             }
             case 2: {
@@ -78,10 +84,13 @@ int main() {
             }
             case 3: {
                 string id, new_name;
+    
                 cout << "Enter Doctor ID to update: ";
                 getline(cin, id);
+    
                 cout << "Enter new Doctor Name: ";
                 getline(cin, new_name);
+    
                 docMgr.UpdateDoctorName(id, new_name);
                 break;
             }
@@ -115,25 +124,26 @@ int main() {
             }
             case 6: {
                 string id;
+    
                 cout << "Enter Doctor ID to delete: ";
                 getline(cin, id);
+    
                 docMgr.DeleteDoctor(id);
                 break;
             }
             case 7: {
                 string id;
-                cout << "Enter Doctor ID: "; getline(cin, id);
-
-                optional<DoctorRecord> doc = docMgr.getByDoctorId(id);
+    
+                cout << "Enter Doctor ID: ";
+                getline(cin, id);
+    
+                auto doc = docMgr.getByDoctorId(id);
+    
                 if (doc)
-                {
-                    cout << "Found Doctor " << id << ": ";
                     DoctorManager::printRecord(*doc);
-                }
                 else
-                {
-                    cout << "Error: Doctor " << id << " not found or is deleted.\n";
-                }
+                    cout << "Doctor not found.\n";
+    
                 break;
             }
             case 8: {
