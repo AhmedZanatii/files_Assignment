@@ -110,7 +110,7 @@ struct DoctorRecord
 
 
 DoctorIndexManager docIndexMgr;
-AvailListManager availListMgr(DOC_DATA_FILE, sizeof(DoctorRecord));
+//AvailListManager availListMgr(DOC_DATA_FILE, sizeof(DoctorRecord));
 
 
 // helper functions
@@ -197,7 +197,7 @@ public:
         DoctorWriteFixed(rec.doctor_id, id, DOC_ID_LEN);
         DoctorWriteFixed(rec.doctor_name, name, DOC_NAME_LEN);
         DoctorWriteFixed(rec.address, addr, DOC_ADDRESS_LEN);
-
+        AvailListManager availListMgr(DOC_DATA_FILE, sizeof(DoctorRecord));
         long pos = -1;
         long avail_pos = availListMgr.getNextAvail();
 
@@ -262,7 +262,7 @@ public:
             cout << "Doctor already deleted.\n";
             return;
         }
-
+        AvailListManager availListMgr(DOC_DATA_FILE, sizeof(DoctorRecord));
         string doctorName = DoctorReadFixed(rec.doctor_name, DOC_ID_LEN);
         docIndexMgr.deleteSecondary(doctorName, pos);
         rec.doctor_id[0] = '*';
