@@ -5,141 +5,151 @@
 
 class QueryManger {
 private:
-  Parser parser;
+    Parser parser;
 
-  string buildDoctorRecordString(const DoctorRecord &rec) {
-    stringstream ss;
-    bool first = true;
+    string buildDoctorRecordString(const DoctorRecord &rec) {
+        stringstream ss;
+        bool first = true;
 
-    for (const auto &field : parser.selectFields) {
-      if (!first)
-        ss << ", ";
-      first = false;
+        for (const auto &field : parser.selectFields) {
+            if (!first)
+                ss << ", ";
+            first = false;
 
-      if (field == "all") {
-        ss << "Doctor ID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN)
-           << ", Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN)
-           << ", Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN);
-//           << ", Status: " << DoctorReadFixed(rec.status, DOC_STATUS_LEN);
-        break;
-      } else if (field == "doctor_id") {
-        ss << "Doctor ID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN);
-      } else if (field == "doctor_name") {
-        ss << "Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN);
-      } else if (field == "address") {
-        ss << "Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN);
-      }
-    }
-
-    return ss.str();
-  }
-
-  string buildRecordString(const AppointmentRecord &rec) {
-    stringstream ss;
-    bool first = true;
-
-    for (const auto &field : parser.selectFields) {
-      if (!first)
-        ss << ", ";
-      first = false;
-
-      if (field == "all") {
-        ss << "Appointment ID: " << readFixed(rec.appointment_id, ID_LEN)
-           << ", Patient ID: " << readFixed(rec.patient_id, PID_LEN)
-           << ", Doctor ID: " << readFixed(rec.doctor_id, DID_LEN)
-           << ", Date: " << readFixed(rec.date, DATE_LEN)
-           << ", Time: " << readFixed(rec.time, TIME_LEN);
-        break;
-      } else if (field == "appointment_id") {
-        ss << "Appointment ID: " << readFixed(rec.appointment_id, ID_LEN);
-      } else if (field == "patient_id") {
-        ss << "Patient ID: " << readFixed(rec.patient_id, PID_LEN);
-      } else if (field == "doctor_id") {
-        ss << "Doctor ID: " << readFixed(rec.doctor_id, DID_LEN);
-      } else if (field == "date") {
-        ss << "Date: " << readFixed(rec.date, DATE_LEN);
-      } else if (field == "time") {
-        ss << "Time: " << readFixed(rec.time, TIME_LEN);
-      }
-    }
-
-    return ss.str();
-  }
-
-  void handleDoctorsTable() {
-    DoctorManager docMgr = DoctorManager();
-
-    if (parser.searchColumnName == "doctor_name") {
-      vector<DoctorRecord> records =
-          docMgr.getByDoctorName(parser.columnValue);
-      if (records.empty()) {
-        cout << "No active records found for Doctor Name: "
-             << parser.columnValue << endl;
-      } else {
-        for (const auto &rec : records) {
-          cout << buildDoctorRecordString(rec) << endl;
+            if (field == "all") {
+                ss << "Doctor ID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN)
+                   << ", Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN)
+                   << ", Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN);
+                break;
+            } else if (field == "doctor_id") {
+                ss << "Doctor ID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN);
+            } else if (field == "doctor_name") {
+                ss << "Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN);
+            } else if (field == "address") {
+                ss << "Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN);
+            }
         }
-      }
-    } else if (parser.searchColumnName == "doctor_id") {
-      optional<DoctorRecord> recOpt =
-          docMgr.getByDoctorId(parser.columnValue);
-      if (recOpt.has_value()) {
-        cout << buildDoctorRecordString(recOpt.value()) << endl;
-      } else {
-        cout << "No active record found for Doctor ID: "
-             << parser.columnValue << endl;
-      }
-    } else {
-      cout << "Unsupported WHERE column: " << parser.searchColumnName << endl;
-    }
-  }
 
-  void handleAppointmentsTable() {
-    AppointmentManager apptMgr = AppointmentManager();
-
-    if (parser.searchColumnName == "doctor_id") {
-      vector<AppointmentRecord> records =
-          apptMgr.getByDoctorId(parser.columnValue);
-      for (const auto &rec : records) {
-        cout << buildRecordString(rec) << endl;
-      }
-    } else if (parser.searchColumnName == "appointment_id") {
-      optional<AppointmentRecord> recOpt =
-          apptMgr.getByAppointmentId(parser.columnValue);
-      if (recOpt.has_value()) {
-        cout << buildRecordString(recOpt.value()) << endl;
-      } else {
-        cout << "No active record found for Appointment ID: "
-             << parser.columnValue << endl;
-      }
-    } else {
-      cout << "Unsupported WHERE column: " << parser.searchColumnName << endl;
+        return ss.str();
     }
-  }
 
-  void handleTableQuery(const string &tableName) {
-    if (tableName == "appointments") {
-      handleAppointmentsTable();
-    } else if (tableName == "doctors") {
-      handleDoctorsTable();
-    } else {
-      cout << "Unsupported table: " << tableName << endl;
+    string buildRecordString(const AppointmentRecord &rec) {
+        stringstream ss;
+        bool first = true;
+
+        for (const auto &field : parser.selectFields) {
+            if (!first)
+                ss << ", ";
+            first = false;
+
+            if (field == "all") {
+                ss << "Appointment ID: " << readFixed(rec.appointment_id, ID_LEN)
+                   << ", Patient ID: " << readFixed(rec.patient_id, PID_LEN)
+                   << ", Doctor ID: " << readFixed(rec.doctor_id, DID_LEN)
+                   << ", Date: " << readFixed(rec.date, DATE_LEN)
+                   << ", Time: " << readFixed(rec.time, TIME_LEN);
+                break;
+            } else if (field == "appointment_id") {
+                ss << "Appointment ID: " << readFixed(rec.appointment_id, ID_LEN);
+            } else if (field == "patient_id") {
+                ss << "Patient ID: " << readFixed(rec.patient_id, PID_LEN);
+            } else if (field == "doctor_id") {
+                ss << "Doctor ID: " << readFixed(rec.doctor_id, DID_LEN);
+            } else if (field == "date") {
+                ss << "Date: " << readFixed(rec.date, DATE_LEN);
+            } else if (field == "time") {
+                ss << "Time: " << readFixed(rec.time, TIME_LEN);
+            }
+        }
+
+        return ss.str();
     }
-  }
+
+    void handleDoctorsTable() {
+        DoctorManager docMgr = DoctorManager();
+
+        if (parser.searchColumnName.empty()) {
+            cout << "Error: WHERE clause is required for this query." << endl;
+            return;
+        }
+
+        if (parser.searchColumnName == "doctor_name") {
+            vector<DoctorRecord> records =
+                    docMgr.getByDoctorName(parser.columnValue);
+            if (records.empty()) {
+                cout << "No active records found for Doctor Name: "
+                     << parser.columnValue << endl;
+            } else {
+                for (const auto &rec : records) {
+                    cout << buildDoctorRecordString(rec) << endl;
+                }
+            }
+        } else if (parser.searchColumnName == "doctor_id") {
+            optional<DoctorRecord> recOpt =
+                    docMgr.getByDoctorId(parser.columnValue);
+            if (recOpt.has_value()) {
+                cout << buildDoctorRecordString(recOpt.value()) << endl;
+            } else {
+                cout << "No active record found for Doctor ID: "
+                     << parser.columnValue << endl;
+            }
+
+        } else {
+            cout << "Unsupported WHERE column: " << parser.searchColumnName << endl;
+        }
+    }
+
+    void handleAppointmentsTable() {
+        AppointmentManager apptMgr = AppointmentManager();
+
+        if (parser.searchColumnName.empty()) {
+            cout << "Error: WHERE clause is required for this query." << endl;
+            return;
+        }
+
+        if (parser.searchColumnName == "doctor_id") {
+            vector<AppointmentRecord> records =
+                    apptMgr.getByDoctorId(parser.columnValue);
+            for (const auto &rec : records) {
+                cout << buildRecordString(rec) << endl;
+            }
+        } else if (parser.searchColumnName == "appointment_id") {
+            optional<AppointmentRecord> recOpt =
+                    apptMgr.getByAppointmentId(parser.columnValue);
+            if (recOpt.has_value()) {
+                cout << buildRecordString(recOpt.value()) << endl;
+            } else {
+                cout << "No active record found for Appointment ID: "
+                     << parser.columnValue << endl;
+            }
+        } else {
+            cout << "Unsupported WHERE column: " << parser.searchColumnName << endl;
+        }
+    }
+
+    void handleTableQuery(const string &tableName) {
+        if (tableName == "appointments") {
+            handleAppointmentsTable();
+        } else if (tableName == "doctors") {
+            handleDoctorsTable();
+        } else {
+            cout << "Unsupported table: " << tableName << endl;
+        }
+    }
 
 public:
-  QueryManger() { this->parser = Parser(); }
-  void makeQuery(string query) {
-    try {
-      parser.parse(query);
-    } catch (const invalid_argument &e) {
-      cout << "Query Error: " << e.what() << endl;
-      return;
-    }
+    QueryManger() { this->parser = Parser(); }
+    void makeQuery(string query) {
+        try {
+            parser.parse(query);
+        } catch (const invalid_argument &e) {
+            cout << "Query Error: " << e.what() << endl;
+            return;
+        }
 
-    string tableName = parser.tableName;
-    handleTableQuery(tableName);
-  }
+        string tableName = parser.tableName;
+        handleTableQuery(tableName);
+    }
 };
 
 /*int main() {
