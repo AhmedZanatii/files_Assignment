@@ -18,7 +18,7 @@ private:
     const string Appdata_file_name;
     const string Appavail_file_name;
     const size_t Apprecord_size;
-    long Apphead_position; // Record number of the first available slot
+    long Apphead_position;
 
     // Read the head position from the avail list file
     void AppreadHead()
@@ -62,8 +62,6 @@ public:
         AppreadHead();
     }
 
-    // Get the next available record position.
-    // Returns -1 if the list is empty.
     long AppgetNextAvail()
     {
         if (Apphead_position == -1)
@@ -83,7 +81,6 @@ public:
         // Seek to the beginning of the record
         data_file.seekg(avail_pos * Apprecord_size, ios::beg);
 
-        // Read the next pointer (which is a long)
         long next_pos;
         data_file.read(reinterpret_cast<char*>(&next_pos), sizeof(long));
         data_file.close();
@@ -121,9 +118,6 @@ public:
     }
 };
 
-// =========================================================================
-//                  CONSTANTS AND STRUCTURES
-// =========================================================================
 
 const string APPT_DATA_FILE = "appointments.dat";
 
@@ -133,8 +127,6 @@ const int PID_LEN = 15;
 const int DID_LEN = 15;
 const int DATE_LEN = 12;
 const int TIME_LEN = 8;
-// STATUS_LEN and 'status' field are removed.
-// The first byte of appointment_id will be used for the deletion marker.
 
 // Struct for Appointment Record
 struct AppointmentRecord {
@@ -143,24 +135,12 @@ struct AppointmentRecord {
     char doctor_id[DID_LEN];
     char date[DATE_LEN];
     char time[TIME_LEN];
-    // char status[STATUS_LEN]; // REMOVED
 };
 
-// =========================================================================
-//                  GLOBAL MANAGERS
-// =========================================================================
-
-// Global index manager for appointments
 AppointmentIndexManager apptIndexMgr;
 
-// Global AVAIL LIST manager (NEW)
-// Initialize with the data file name and the size of the record
 AppAvailListManager availListMgr(APPT_DATA_FILE, sizeof(AppointmentRecord));
 
-
-// =========================================================================
-//                  HELPER & FILE I/O FUNCTIONS
-// =========================================================================
 
 // Generic writeFixed (used for all fields)
 void writeFixed(char* dest, const string& s, int size) {
@@ -177,17 +157,14 @@ string readFixed(const char* src, int size) {
     return string(src, len);
 }
 
-// Specialized readFixed for the primary key (appointment_id) to handle the '*' marker
 string readApptIdFixed(const char* src, int size) {
     int len = 0;
-    // Start reading from the second byte if the first byte is the deletion marker '*'
     int start_index = (src[0] == '*') ? 1 : 0;
 
     while (len < size && src[start_index + len] != 0) len++;
     return string(src + start_index, len);
 }
 
-// Checks if the record is logically deleted by checking the first byte of the primary key
 bool isRecordDeleted(const AppointmentRecord& rec)
 {
     return rec.appointment_id[0] == '*';
@@ -228,11 +205,6 @@ AppointmentRecord readRecord(long pos) {
     file.close();
     return rec;
 }
-
-// =========================================================================
-//                  APPOINTMENT MANAGER CLASS
-// =========================================================================
-
 class AppointmentManager {
 public:
     AppointmentManager() {}

@@ -110,7 +110,6 @@ struct DoctorRecord
 
 
 DoctorIndexManager docIndexMgr;
-//AvailListManager availListMgr(DOC_DATA_FILE, sizeof(DoctorRecord));
 
 
 // helper functions
