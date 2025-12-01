@@ -19,8 +19,8 @@ private:
       if (field == "all") {
         ss << "Doctor ID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN)
            << ", Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN)
-           << ", Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN)
-           << ", Status: " << DoctorReadFixed(rec.status, DOC_STATUS_LEN);
+           << ", Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN);
+//           << ", Status: " << DoctorReadFixed(rec.status, DOC_STATUS_LEN);
         break;
       } else if (field == "doctor_id") {
         ss << "Doctor ID: " << DoctorReadFixed(rec.doctor_id, DOC_ID_LEN);
@@ -28,8 +28,6 @@ private:
         ss << "Name: " << DoctorReadFixed(rec.doctor_name, DOC_NAME_LEN);
       } else if (field == "address") {
         ss << "Address: " << DoctorReadFixed(rec.address, DOC_ADDRESS_LEN);
-      } else if (field == "status") {
-        ss << "Status: " << DoctorReadFixed(rec.status, DOC_STATUS_LEN);
       }
     }
 
@@ -50,8 +48,7 @@ private:
            << ", Patient ID: " << readFixed(rec.patient_id, PID_LEN)
            << ", Doctor ID: " << readFixed(rec.doctor_id, DID_LEN)
            << ", Date: " << readFixed(rec.date, DATE_LEN)
-           << ", Time: " << readFixed(rec.time, TIME_LEN)
-           << ", Status: " << readFixed(rec.status, STATUS_LEN);
+           << ", Time: " << readFixed(rec.time, TIME_LEN);
         break;
       } else if (field == "appointment_id") {
         ss << "Appointment ID: " << readFixed(rec.appointment_id, ID_LEN);
@@ -63,8 +60,6 @@ private:
         ss << "Date: " << readFixed(rec.date, DATE_LEN);
       } else if (field == "time") {
         ss << "Time: " << readFixed(rec.time, TIME_LEN);
-      } else if (field == "status") {
-        ss << "Status: " << readFixed(rec.status, STATUS_LEN);
       }
     }
 
